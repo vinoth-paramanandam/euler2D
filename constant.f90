@@ -1,3 +1,18 @@
+!---------------------------------------------------------------------
+! Indian Institute of Technology-Madras, PhD scholar
+!---------------------------------------------------------------------
+!
+! MODULE: Constant
+!
+!> @author
+!> Vinoth P}
+!
+! DESCRIPTION:
+!> Constants used to define the precision is provided in this module
+!
+! REVISION HISTORY:
+! 03 June 2022 - Initial Version
+!---------------------------------------------------------------------
 module constant
   use iso_fortran_env
   implicit none
@@ -6,10 +21,10 @@ module constant
   integer, parameter :: sp = real32
   integer, parameter :: dp = real64
   ! Set the precision integer variables for the program
-  integer, parameter :: i8 = int8 ! -128 to 127
+  integer, parameter :: i8 = int8   ! -128 to 127
   integer, parameter :: i16 = int16 ! -32768 to 32767
   integer, parameter :: i32 = int32 ! -2147483648 to 2147483647
-  integer, parameter :: i64 = int64 ! -9,223,372,036,854,775,808
+  integer, parameter :: i64 = int64 ! -9223372036854775808 to 9223372036854775807
 
   ! Some constants for the program
   real(dp), parameter :: pi = 3.14159265358979311599796346854d0
@@ -37,7 +52,6 @@ module constant
   real(dp), parameter :: sixth = one/six
 
   ! Some small numbers
-  real(dp), parameter :: e_weno = 1.0d-6
-  real(dp), parameter :: e_tvd = 1.0d-7
+  real(dp), parameter :: e_tvd = 1.0d-8
 
  end module constant
