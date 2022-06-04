@@ -91,5 +91,6 @@ module declaration
   integer(i32), allocatable, dimension(:, :, :) :: boundarycells
 
   ! Total conditions and norm variable
-  real(dp) :: t0, p0, norm
+  real(dp) :: t0, p0
+  logical :: norm
  end module

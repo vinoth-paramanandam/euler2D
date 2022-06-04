@@ -14,7 +14,10 @@ module read_input
     logical :: file_status
 
     ! Creating namelists for the use in the input file
-    namelist/pbl_params/cfl, ftime, timeaccurate, cfl_no, dt, &
+    !namelist/problem_params/cfl, ftime, timeaccurate, cfl_no, dt, &
+     !    final_time, max_counter, print_iter, print_val, norm
+
+    namelist/problem_params/cfl, ftime, timeaccurate, cfl_no, dt, &
          final_time, max_counter, print_iter, print_val, norm
 
     namelist/const_params/g1, amol, pr_lam, c1ref
@@ -35,15 +38,16 @@ module read_input
     inquire(file=inputfile, exist=file_status)
 
     if(file_status) then
-       open(unit = 11, file = 'input.in')
+       open(unit = 13, file = inputfile)
 
-       read(11, nml = pbl_params)
-       read(11, nml = const_params)
-       read(11, nml = file_params)
-       read(11, nml = initial_params)
-       read(11, nml = specific_conds)
-       read(11, nml = rk_params)
-       close(11)
+       read(13, nml = problem_params)
+       read(13, nml = const_params)
+       read(13, nml = file_params)
+       read(13, nml = initial_params)
+       read(13, nml = total_params)
+       read(13, nml = specific_conds)
+       read(13, nml = rk_params)
+       close(13)
     else
        write(error_unit, '(a)') &
             'Input File is not found in the present directory'
