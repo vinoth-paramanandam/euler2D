@@ -5,10 +5,14 @@ OP_LINK =
 OP_COMP =
 
 SRC = main.f90 \
-constant.f90
+constant.f90 \
+declaration.f90 \
+read_input.f90
 
 OBJ = main.o \
-constant.o
+constant.o \
+declaration.o \
+read_input.o
 
 all: $(EXE)
 
@@ -31,4 +35,8 @@ cleaner:
 
 constant.o: constant.f90
 
-main.o: main.f90 constant.o
+declaration.o: declaration.f90 constant.o
+
+read_input.o: read_input.f90 constant.o declaration.o
+
+main.o: main.f90 constant.o declaration.o read_input.o

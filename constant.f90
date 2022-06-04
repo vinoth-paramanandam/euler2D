@@ -31,6 +31,7 @@ module constant
   real(dp), parameter :: Runiv = 8.3144621d0
 
   ! Some real numbers for the calculation
+  real(dp), parameter :: zero = 0.0d0
   real(dp), parameter :: one = 1.0d0
   real(dp), parameter :: two = 2.0d0
   real(dp), parameter :: three = 3.0d0

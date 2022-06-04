@@ -29,6 +29,7 @@ module declaration
 
   ! Files for the problem
   character(len=50) :: gridfile, restartfile, outputfile, boundaryfile
+  character(len=50) :: inputfile='input.in'
   logical :: restart_sim
 
   ! Counters initialised for the problem
@@ -88,3 +89,7 @@ module declaration
   integer(i32), allocatable, dimension(:, :, :) :: bctype
   integer(i32), allocatable, dimension(:, :, :) :: connection
   integer(i32), allocatable, dimension(:, :, :) :: boundarycells
+
+  ! Total conditions and norm variable
+  real(dp) :: t0, p0, norm
+ end module

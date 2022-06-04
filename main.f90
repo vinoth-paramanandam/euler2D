@@ -1,9 +1,11 @@
 program main
   use constant
+  use declaration
+  use read_input
+
   implicit none
 
-  integer(i8) :: int_test = 127
-
-  print *, int_test
+  call read_inputfile
+  print *, tinit, uinit, vinit, pinit, g1, g2, r, c23
 
 end program main
