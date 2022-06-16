@@ -56,6 +56,7 @@ module declaration
 
   ! fluid properties
   real(dp), allocatable, dimension(:, :, :) :: rho, u, v, p
+  real(dp), allocatable, dimension(:, :, :) :: c, h, t
 
   ! Conservative varaibles
   real(dp), allocatable, dimension(:, :, :, :) :: q

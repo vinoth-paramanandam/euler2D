@@ -7,12 +7,14 @@ OP_COMP =
 SRC = main.f90 \
 constant.f90 \
 declaration.f90 \
-read_input.f90
+read_input.f90 \
+boundary.f90
 
 OBJ = main.o \
 constant.o \
 declaration.o \
-read_input.o
+read_input.o \
+boundary.o
 
 all: $(EXE)
 
@@ -39,4 +41,6 @@ declaration.o: declaration.f90 constant.o
 
 read_input.o: read_input.f90 constant.o declaration.o
 
-main.o: main.f90 constant.o declaration.o read_input.o
+boundary.o: boundary.f90 constant.o declaration.o
+
+main.o: main.f90 constant.o declaration.o read_input.o boundary.o

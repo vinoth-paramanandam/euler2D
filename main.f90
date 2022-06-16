@@ -2,6 +2,7 @@ program main
   use constant
   use declaration
   use read_input
+  use boundary
 
   implicit none
 
