@@ -10,9 +10,12 @@ module grid
     subroutine meshreader
       implicit none
 
+      integer(i8) :: ifile
       integer(i8) :: nb
-      integer(i32) :: nxmax, nymax, nxdomain, nydomain, nzdomain
-      integer(i32) :: i, j, imxnb, jmxnb
+      integer(i16) :: nxdomain, nydomain, nzdomain
+      integer(i16) :: i, j, imxnb, jmxnb
+
+      character(len=20) :: dummy
 
       logical :: file_status
       real(real64) :: x1, x2, x3, x4, y1, y2, y3, y4
@@ -25,6 +28,7 @@ module grid
       inquire(file=gridfile, exist=file_status)
 
       if (file_status) then
+         open(unit=13, file=gridfile)
          do
             read(13, *, iostat=ifile) dummy, nxdomain, nydomain, nzdomain
 
@@ -38,16 +42,16 @@ module grid
             rewind(13)
          end do
       else
-            write(error_unit, 'a') 'Grid file is not found.'
-            write(error_unit, 'a') 'Aborting the program'
+            write(error_unit, *) 'Grid file is not found.'
+            write(error_unit, *) 'Aborting the program'
       end if
 
-      close(13)
       ! Allocation of variables
       call mallocate_variables(nxmax, nymax, nblocks)
 
       ! Read the grid file to get the values
       do nb = 1, nblocks
+         read(13, *) dummy, nxdomain, nydomain, nzdomain
          print *, 'Reading the Block ', dummy(8:)
          print *, 'Number of nodes in x direction ', nxdomain
          print *, 'Number of nodes in y direction ', nydomain
@@ -59,7 +63,7 @@ module grid
 
          do j = 1, jmax(nb)
             do i = 1, imax(nb)
-               read(3, *) x(i, j, nb), y(i, j, nb)
+               read(13, *) x(i, j, nb), y(i, j, nb)
             end do
          end do
       end do
@@ -78,11 +82,11 @@ module grid
 
             ! right boundary cells
             x(imxnb+1, j, nb) = two*x(imxnb, j, nb) - x(imxnb-1, j, nb)
-            x(imxnb+2, j, nb) = two*x(imxnb+1, j, nb) - x(imxnb1, j, nb)
+            x(imxnb+2, j, nb) = two*x(imxnb+1, j, nb) - x(imxnb, j, nb)
             x(imxnb+3, j, nb) = two*x(imxnb+2, j, nb) - x(imxnb+1, j, nb)
 
-            y(imx+nb+1, j, nb) = two*y(imxnb, j, nb) - y(imxnb-1, j, nb)
-            y(imxnb+2, j, nb) = two*y(imxnb+1, j, nb) - y(imxnb1, j, nb)
+            y(imxnb+1, j, nb) = two*y(imxnb, j, nb) - y(imxnb-1, j, nb)
+            y(imxnb+2, j, nb) = two*y(imxnb+1, j, nb) - y(imxnb, j, nb)
             y(imxnb+3, j, nb) = two*y(imxnb+2, j, nb) - y(imxnb+1, j, nb)
         end do
 
@@ -139,10 +143,11 @@ module grid
     subroutine mallocate_variables(ixmax, jymax, nblock)
       implicit none
 
-      integer, intent(in):: ixmax, jymax, nblock
-      integer :: iostat
-      integer :: istart, iend, jstart, jend
-      integer :: nb
+      integer(i16), intent(in):: ixmax, jymax
+      integer(i8), intent(in):: nblock
+      integer(i8) :: iostat
+      integer(i16) :: istart, iend, jstart, jend
+      integer(i8) :: nb
 
       ! staring and ending points of the grid points
 
@@ -196,11 +201,11 @@ module grid
       allocate(q(4, istart:iend-1, jstart:jend-1, nb), STAT = iostat)
       if (iostat /= 0) stop 'Error in allocating the Conservative variables'
 
-      allocate(uleft(4, istart:iend-1, jstart:jend-1, nb), uright(4, istart:iend-1, jstart:jend-1, nb), STAT = iostat)
-      if (iostat /= 0) stop 'Error in allocating the weno reconstruction variables'
+      ! allocate(uleft(4, istart:iend-1, jstart:jend-1, nb), uright(4, istart:iend-1, jstart:jend-1, nb), STAT = iostat)
+      ! if (iostat /= 0) stop 'Error in allocating the weno reconstruction variables'
 
-      allocate(delLeft(4, istart:iend-1, jstart:jend-1, nb), delRight(4, istart:iend-1, jstart:jend-1, nb), STAT = iostat)
-      if (iostat /= 0) stop 'Error in allocating the weno reconstruction variables'
+      ! allocate(delLeft(4, istart:iend-1, jstart:jend-1, nb), delRight(4, istart:iend-1, jstart:jend-1, nb), STAT = iostat)
+      ! if (iostat /= 0) stop 'Error in allocating the weno reconstruction variables'
 
       allocate(l_res(4, istart:iend-1, jstart:jend-1, nb), STAT = iostat)
       if (iostat /= 0) stop 'Error in allocating the residual variables'
@@ -225,8 +230,8 @@ module grid
       q_rk = zero
       l_res = zero
       l_vres = zero
-      delLeft = zero
-      delRight = zero
+      ! delLeft = zero
+      ! delRight = zero
 
       rho = zero
       u = zero
@@ -243,7 +248,7 @@ module grid
 
         deallocate(x, y, xc, yc, a, dl)
         deallocate(rho, u, v, p, t, c, h)
-        deallocate(q, uleft, uright, delLeft, delRight, l_res, l_vres, q_rk, qn, qi)
+        deallocate(q, l_res, l_vres, q_rk, qn, qi)
 
     end subroutine deallocation
 end module grid

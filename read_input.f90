@@ -23,7 +23,7 @@ module read_input
     namelist/const_params/g1, amol, pr_lam, c1ref
 
     namelist/file_params/gridfile, restartfile, outputfile, &
-         restart_sim, boundaryfile
+         restart_sim, boundaryfile, initialfile
 
     namelist/initial_params/mach_no, ismach, uinit, vinit, &
          pinit, tinit
@@ -38,16 +38,16 @@ module read_input
     inquire(file=inputfile, exist=file_status)
 
     if(file_status) then
-       open(unit = 13, file = inputfile)
+       open(unit = 17, file = inputfile)
 
-       read(13, nml = problem_params)
-       read(13, nml = const_params)
-       read(13, nml = file_params)
-       read(13, nml = initial_params)
-       read(13, nml = total_params)
-       read(13, nml = specific_conds)
-       read(13, nml = rk_params)
-       close(13)
+       read(17, nml = problem_params)
+       read(17, nml = const_params)
+       read(17, nml = file_params)
+       read(17, nml = initial_params)
+       read(17, nml = total_params)
+       read(17, nml = specific_conds)
+       read(17, nml = rk_params)
+       close(17)
     else
        write(error_unit, '(a)') &
             'Input File is not found in the present directory'

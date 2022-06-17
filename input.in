@@ -19,11 +19,12 @@ c1ref = 1.458d-6        ! Reference value of the viscosity
 /
 
 &file_params
-gridfile = 'mesh17l.geo'    !Grid file name should be given here
+gridfile = 'gridrect.geo'    !Grid file name should be given here
 restartfile = 'restartout.in'  !Restart file name should be given here
 outputfile = 'residual.in'  !File to store the residual values
 restart_sim = .false.       !Make it true if you want to restart the simulation
-boundaryfile = 'boundary.topo' ! Multiblock info mesh connectivity details. 
+boundaryfile = 'boundary.topo' ! Multiblock info mesh connectivity details.
+initialfile = 'initial.in'     ! File that contains the initial conditions for the domain
 /
 
 ! initial params can be modified for the different problems

@@ -29,6 +29,7 @@ module declaration
 
   ! Files for the problem
   character(len=50) :: gridfile, restartfile, outputfile, boundaryfile
+  character(len=50) :: initialfile
   character(len=50) :: inputfile='input.in'
   logical :: restart_sim
 
@@ -40,7 +41,7 @@ module declaration
   integer(i16), allocatable, dimension(:) :: imax, jmax
   integer(i16), allocatable, dimension(:) :: nx, ny
   integer(i16) :: nxmax, nymax
-  integer(i8) :: nblocks
+  integer(i8) :: nblocks = 0
 
   real(dp), allocatable, dimension(:, :, :) :: x, y
   real(dp), allocatable, dimension(:, :, :) :: xc, yc
