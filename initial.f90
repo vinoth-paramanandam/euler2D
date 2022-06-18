@@ -1,6 +1,7 @@
 module initial
   use constant
   use declaration
+  use misc, only: primitive2conservative, primitive_calc
   use iso_fortran_env
 
   implicit none
@@ -53,6 +54,9 @@ module initial
          stop
       end if
 
+      call primitive_calc
+      call primitive2conservative
+
     end subroutine read_initial_conds
 
     subroutine nozzle_initial_conds
@@ -71,5 +75,10 @@ module initial
             end do
          end do
       end do
+
+      call primitive_calc
+      call primitive2conservative
+
     end subroutine nozzle_initial_conds
+
 end module initial

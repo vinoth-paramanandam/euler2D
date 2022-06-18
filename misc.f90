@@ -1,6 +1,7 @@
 module misc
   use constant
   use declaration
+  use iso_fortran_env
 
   implicit none
 
@@ -70,4 +71,29 @@ module misc
 
     end subroutine primitive_calc
 
+    subroutine read_restart_file
+      implicit none
+
+      logical :: file_exist
+      integer(i16) :: i, j
+      integer(i8) :: nb
+
+      inquire(file = restartfile, exist = file_exist)
+      if (file_exist) then
+         write(output_unit, *) &
+              "Reading the restart fiole for loading the initial conditions"
+         open(unit=23, file=restartfile, form='formatted')
+         read(23, *) (((q(1, i, j, nb), i = 1, nx(nb)), j = 1, ny(nb)), nb = 1, nblocks)
+         read(23, *) (((q(2, i, j, nb), i = 1, nx(nb)), j = 1, ny(nb)), nb = 1, nblocks)
+         read(23, *) (((q(3, i, j, nb), i = 1, nx(nb)), j = 1, ny(nb)), nb = 1, nblocks)
+         read(23, *) (((q(4, i, j, nb), i = 1, nx(nb)), j = 1, ny(nb)), nb = 1, nblocks)
+         close(23)
+      else
+         write(error_unit, *) "Restart file not found"
+         write(error_unit, *) " Aborting the program"
+         stop
+      end if
+
+      call conservative2primitive
+    end subroutine read_restart_file
   end module misc

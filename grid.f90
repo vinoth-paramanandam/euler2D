@@ -39,11 +39,12 @@ module grid
                nxmax = max(nxmax, nxdomain)
                nymax = max(nymax, nydomain)
             end if
-            rewind(13)
          end do
+         rewind(13)
       else
             write(error_unit, *) 'Grid file is not found.'
             write(error_unit, *) 'Aborting the program'
+            stop
       end if
 
       ! Allocation of variables

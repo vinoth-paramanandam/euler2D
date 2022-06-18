@@ -51,7 +51,7 @@ grid.o: grid.f90 constant.o declaration.o
 
 boundary.o: boundary.f90 constant.o declaration.o
 
-initial.o: boundary.f90 constant.o declaration.o
+initial.o: initial.f90 constant.o declaration.o misc.o
 
 misc.o: misc.f90 constant.o declaration.o
 

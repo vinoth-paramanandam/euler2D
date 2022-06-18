@@ -14,13 +14,13 @@ program main
 
   call meshreader
 
-  call nozzle_initial_conds
-
-  call primitive_calc
+  if (restart_sim) then
+     call read_restart_file
+  else
+     call nozzle_initial_conds
+  end if
 
   call nozzleboundary
-
-  call primitive2conservative
 
 
 
