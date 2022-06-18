@@ -10,7 +10,8 @@ declaration.f90 \
 read_input.f90 \
 grid.f90 \
 boundary.f90 \
-initial.f90
+initial.f90 \
+misc.f90
 
 OBJ = main.o \
 constant.o \
@@ -18,7 +19,8 @@ declaration.o \
 read_input.o \
 grid.o \
 boundary.o \
-initial.o
+initial.o \
+misc.o
 
 all: $(EXE)
 
@@ -51,4 +53,7 @@ boundary.o: boundary.f90 constant.o declaration.o
 
 initial.o: boundary.f90 constant.o declaration.o
 
-main.o: main.f90 constant.o declaration.o read_input.o grid.o initial.o boundary.o
+misc.o: misc.f90 constant.o declaration.o
+
+main.o: main.f90 constant.o declaration.o read_input.o grid.o \
+	initial.o misc.o boundary.o
