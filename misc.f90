@@ -96,4 +96,36 @@ module misc
 
       call conservative2primitive
     end subroutine read_restart_file
+
+    subroutine timestep
+      implicit none
+
+      integer(i16) :: i, j
+      integer(i8) :: nb
+
+      real(dp) :: qplus, asound, dt_cellvalue
+
+      if (cfl) then
+         dtmin = 1.0e8
+
+         do nb = 1, nblocks
+            do j = 1, ny(nb)
+               do i = 1, nx(nb)
+                  qplus = dsqrt(u(i, j, nb)**2 + v(i, j, nb))
+                  asound = c(i, j, nb)
+                  dt_cellvalue = cfl_no*dl(i, j, nb)/qplus
+                  dt_cell(i, j, nb) = dt_cellvalue
+                  dtmin = dmin1(dtmin, dt_cellvalue)
+               end do
+            end do
+         end do
+         if (timeaccurate) then
+            dt_cell = dtmin
+         end if
+      else
+         dt_cell = dt
+         dtmin = dt
+      end if
+    end subroutine timestep
+
   end module misc
