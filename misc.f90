@@ -128,4 +128,83 @@ module misc
       end if
     end subroutine timestep
 
+    subroutine write_output
+      integer(i8) :: nb
+      integer(i16) :: i, j
+
+      open(unit=unit_id, file=filename, form='formatted')
+
+      write(unit_id, *) "VARIABLES = X, Y, DENSITY, U, V, P, T"
+      write(unit_id, *) "ZONE I=", imax(nb), ", J=", jmax(nb), &
+           "DATAPCKING=BLOCK, VARLOCATION=([3,4,5,6,7]=CELLCENTERED)"
+      write(unit_id, *) "SOLUTIONTIME=", time
+
+      do nb = 1, nblocks
+         do j = 1, jmax(nb)
+            do i = 1, imax(nb)
+               write(unit_id, *) x(i, j, nb)
+            end do
+         end do
+      end do
+
+      do nb = 1, nblocks
+         do j = 1, jmax(nb)
+            do i = 1, imax(nb)
+               write(unit_id, *) y(i, j, nb)
+            end do
+         end do
+      end do
+
+      do nb = 1, nblocks
+         do j = 1, ny(nb)
+            do i = 1, nx(nb)
+               write(unit_id, *) rho(i, j, nb)
+            end do
+         end do
+      end do
+
+      do nb = 1, nblocks
+         do j = 1, ny(nb)
+            do i = 1, nx(nb)
+               write(unit_id, *) u(i, j, nb)
+            end do
+         end do
+      end do
+
+      do nb = 1, nblocks
+         do j = 1, ny(nb)
+            do i = 1, nx(nb)
+               write(unit_id, *) v(i, j, nb)
+            end do
+         end do
+      end do
+
+      do nb = 1, nblocks
+         do j = 1, ny(nb)
+            do i = 1, nx(nb)
+               write(unit_id, *) p(i, j, nb)
+            end do
+         end do
+      end do
+
+      do nb = 1, nblocks
+         do j = 1, ny(nb)
+            do i = 1, nx(nb)
+               write(unit_id, *) t(i, j, nb)
+            end do
+         end do
+      end do
+
+      close(unit_id)
+    end subroutine write_output
+
+    subroutine write_restart
+      implicit none
+      integer(i8) :: nb, k
+      integer(i16) :: i, j
+
+      open(unit=23, status='replace', file=restartfile, form='formatted')
+      write(23, *) ((((q(k, i, j, nb), k=1, 4), i = 1, nx(nb)), j = 1, ny(nb)), nb =1, nblocks)
+      close(23)
+    end subroutine write_restart
   end module misc
