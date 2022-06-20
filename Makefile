@@ -11,7 +11,9 @@ read_input.f90 \
 grid.f90 \
 boundary.f90 \
 initial.f90 \
-misc.f90
+misc.f90 \
+odesolver.f90 \
+flux.f90
 
 OBJ = main.o \
 constant.o \
@@ -20,7 +22,9 @@ read_input.o \
 grid.o \
 boundary.o \
 initial.o \
-misc.o
+misc.o \
+odesolver.o \
+flux.o
 
 all: $(EXE)
 
@@ -55,5 +59,9 @@ initial.o: initial.f90 constant.o declaration.o misc.o
 
 misc.o: misc.f90 constant.o declaration.o
 
+odesolver.o: odesolver.f90 constant.o declaration.o
+
+flux.o: flux.f90 constant.o declaration.o
+
 main.o: main.f90 constant.o declaration.o read_input.o grid.o \
-	initial.o misc.o boundary.o
+	initial.o misc.o boundary.o odesolver.o flux.o

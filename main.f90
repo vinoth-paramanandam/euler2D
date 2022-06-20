@@ -6,7 +6,8 @@ program main
   use initial
   use misc
   use boundary
-
+  use odesolver
+  use flux
 
   implicit none
 
@@ -39,11 +40,11 @@ program main
      do irkstep = 1, nsteps
         l_res = zero
 
-       ! call isecondMUSCL
+       call isecondMUSCL
 
-       ! call jsecondMUSCL
+       call jsecondMUSCL
 
-       ! call rksolver(nsteps, irkstep)
+        call tvdrk2(irkstep)
 
         q = qn
 
@@ -101,16 +102,16 @@ program main
         write(filename, '(a, i8.8, a)') "plot", counter, ".dat"
         unit_id = counter + 31
 
-        !call write_output
-        !call write_restart
+        call write_output
+        call write_restart
         exit
      else
         if (mod(counter, print_iter) == 0) then
            write(filename, '(a, i8.8, a)') "plot", counter, ".dat"
            unit_id = counter + 31
 
-          ! call write_output
-           !call write_restart
+           call write_output
+           call write_restart
         end if
      end if
 
