@@ -10,7 +10,8 @@ module boundary
     subroutine nozzleboundary
       implicit none
 
-      integer(i8) :: nb, i, j
+      integer(i8) :: nb
+      integer(i16) ::  i, j
       real(dp) :: dxlen, dylen, dlen, normalx, normaly
       real(dp) :: un, ut, pamb, uamb, vamb, tamb, qnorm, m, rref, cref
       real(dp) :: pdom, udom, vdom, rdom, pprev, rprev, uprev, vprev
@@ -58,8 +59,8 @@ module boundary
       ! top boundary conditions
       do j = ny(nb)+1, ny(nb)+gc
          do i = 1, nx(nb)
-            dxlen = (-x(i+1, ny(nb), nb) + x(i, ny(nb), nb))
-            dylen = (y(i+1, ny(nb), nb) - y(i, ny(nb), nb))
+            dxlen = (-x(i, ny(nb), nb) + x(i+1, ny(nb), nb))
+            dylen = (y(i, ny(nb), nb) - y(i+1, ny(nb), nb))
             dlen = dsqrt(dxlen*dxlen + dylen*dylen)
             normalx = dylen/dlen
             normaly = dxlen/dlen
@@ -110,10 +111,15 @@ module boundary
                v(i, j, nb) = two*vb - vdom
                rho(i, j, nb) = two*rb - rdom
             else
-               p(i, j, nb) = two*pdom - pprev
-               rho(i, j, nb) = two*rdom - rprev
-               u(i, j, nb) = two*udom - uprev
-               v(i, j, nb) = two*vdom - vprev
+               ! p(i, j, nb) = two*pdom - pprev
+               ! rho(i, j, nb) = two*rdom - rprev
+               ! u(i, j, nb) = two*udom - uprev
+               ! v(i, j, nb) = two*vdom - vprev
+
+               p(i, j, nb) = pdom 
+               rho(i, j, nb) = rdom 
+               u(i, j, nb) = udom 
+               v(i, j, nb) = vdom 
             end if
 
             c(i, j, nb) = dsqrt(g1*p(i, j, nb)/rho(i, j, nb))

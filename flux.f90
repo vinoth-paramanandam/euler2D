@@ -57,7 +57,7 @@ module flux
 
       sr = dmax1(qro+aro, qnr+asoundr, zero)
 
-      fluxvalue = half*(fl + fr - dabs(sr)*(qr - ql))*dlen
+      fluxvalue = half*(fl + fr - sr*(qr - ql))*dlen
     end subroutine lf
 
     subroutine isecondMUSCL
@@ -116,7 +116,7 @@ module flux
          do j = 0, ny(nb)
             do i = 1, nx(nb)
                dxlen = -(x(i, j+1, nb) - x(i+1, j+1, nb))
-               dylen = (y(i, j+1, nb) - y(i+1, j, nb))
+               dylen = (y(i, j+1, nb) - y(i+1, j+1, nb))
                dlen = dsqrt(dxlen*dxlen + dylen*dylen)
                normalx = dylen/dlen
                normaly = dxlen/dlen

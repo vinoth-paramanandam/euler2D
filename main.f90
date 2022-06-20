@@ -8,6 +8,7 @@ program main
   use boundary
   use odesolver
   use flux
+  use iso_fortran_env
 
   implicit none
 
@@ -18,7 +19,7 @@ program main
   real(dp) :: diffro, diffmomx, diffmomy, diffenergy
   real(dp), dimension(4) :: sum1n
 
-  logical :: maxcount, l2norm
+  logical :: maxcount = .false., l2norm = .false.
 
   call read_inputfile
 
@@ -32,10 +33,14 @@ program main
 
   call nozzleboundary
 
+  open(unit=29, status='replace', file = outputfile, form='formatted', position='append')
+
   do
      qi = q
 
      call timestep
+
+     time = time + dtmin
 
      do irkstep = 1, nsteps
         l_res = zero
@@ -51,8 +56,9 @@ program main
         call conservative2primitive
 
         call nozzleboundary
+        
      end do
-
+      
      rss = 1.0d8
 
      diffro = zero
@@ -86,21 +92,19 @@ program main
            end do
 
            rss = dsqrt(sum2n)
-           open(unit = 29, status = 'old', file = outputfile, form = 'formatted')
-           write(29, '(1i16, 5es14.7)') counter, time, sum1n(1), &
+          ! open(unit = 29, status = 'old', file = outputfile, form = 'formatted')
+           write(29, '(1i8, 5es14.7)') counter, time, sum1n(1), &
                 sum1n(2), sum1n(3), sum1n(4)
-           write(output_unit, '(1i16, 3es14.5)') counter, time, sum1n, rss
+           write(output_unit, '(1i8, 3es14.5)') counter, time, sum1n(1), rss
         end if
      end if
 
-     time = time + dtmin
-
      if (counter >= max_counter) maxcount = .true.
-     if (rss <= 1.0d-8) l2norm = .true.
+   !   if (rss <= 1.0d-8) l2norm = .true.
 
      if (maxcount .or. l2norm .or. ftime) then
         write(filename, '(a, i8.8, a)') "plot", counter, ".dat"
-        unit_id = counter + 31
+        unit_id = unit_id + 100
 
         call write_output
         call write_restart
@@ -108,14 +112,16 @@ program main
      else
         if (mod(counter, print_iter) == 0) then
            write(filename, '(a, i8.8, a)') "plot", counter, ".dat"
-           unit_id = counter + 31
+           unit_id = unit_id + 100
 
            call write_output
            call write_restart
         end if
      end if
 
+     counter = counter + 1
   end do
 
   call deallocation
+  close(29)
 end program main

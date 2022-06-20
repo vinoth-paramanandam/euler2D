@@ -71,7 +71,7 @@ module declaration
 
   ! File pointers and random filenames
   character(len=50) :: filename
-  integer(i8) :: unit_id
+  integer(i16) :: unit_id = 31
 
   ! Time variable storage
   real(dp), allocatable, dimension(:, :, :) :: dt_cell

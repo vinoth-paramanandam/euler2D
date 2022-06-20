@@ -16,7 +16,6 @@ module odesolver
 
       real(dp) :: dtmod
 
-
       if(rkstep .eq. 1) then
          do nb = 1, nblocks
             do j = 1, ny(nb)
