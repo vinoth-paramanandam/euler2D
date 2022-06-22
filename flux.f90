@@ -91,7 +91,9 @@ module flux
                     (al*al + bl*bl + two*e_tvd)
 
                vecl = q(:, i, j, nb) + half*delL
-               vecr = q(:, i, j, nb) - half*delR
+               vecr = q(:, i+1, j, nb) - half*delR
+               ! vecl = q(:, i, j, nb)
+               ! vecr = q(:, i+1, j, nb)
 
                call lf(vecl, vecr, normalx, normaly, dlen, fluxval)
 
@@ -133,7 +135,9 @@ module flux
                     (al*al + bl*bl + two*e_tvd)
 
                vecl = q(:, i, j, nb) + half*delL
-               vecr = q(:, i, j, nb) - half*delR
+               vecr = q(:, i, j+1, nb) - half*delR
+               ! vecl = q(:, i, j, nb)
+               ! vecr = q(:, i, j+1, nb)
 
                call lf(vecl, vecr, normalx, normaly, dlen, fluxval)
 
