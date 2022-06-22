@@ -28,7 +28,7 @@ module constant
 
   ! Some constants for the program
   real(dp), parameter :: pi = 3.14159265358979311599796346854d0
-  real(dp), parameter :: Runiv = 8.3144621d0
+  real(dp), parameter :: Runiv = 8.3144621d3
 
   ! Some real numbers for the calculation
   real(dp), parameter :: zero = 0.0d0

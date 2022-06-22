@@ -1,8 +1,8 @@
 FC = gfortran
 EXE = run
 
-OP_LINK =
-OP_COMP =
+OP_LINK = -O3
+OP_COMP = -O3
 
 SRC = main.f90 \
 constant.f90 \

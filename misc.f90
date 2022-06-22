@@ -19,8 +19,8 @@ module misc
                q(1, i, j, nb) = rho(i, j, nb)
                q(2, i, j, nb) = rho(i, j, nb)*u(i, j, nb)
                q(3, i, j, nb) = rho(i, j, nb)*v(i, j, nb)
-               q(4, i, j, nb) = cvval*t(i, j, nb) + half*rho(i, j, nb)*&
-                    & (u(i, j, nb)**2 + v(i, j, nb)**2)
+               q(4, i, j, nb) = (cvval*t(i, j, nb) + half*&
+                    (u(i, j, nb)**2 + v(i, j, nb)**2))*rho(i, j, nb)
             end do
          end do
       end do
@@ -40,7 +40,7 @@ module misc
                u(i, j, nb) = q(2, i, j, nb)/rho(i, j, nb)
                v(i, j, nb) = q(3, i, j, nb)/rho(i, j, nb)
                p(i, j, nb) = (q(4, i, j, nb) - half*rho(i, j, nb)*&
-                    & (u(i, j, nb)**2 + v(i, j, nb)**2))*g2
+                    (u(i, j, nb)**2 + v(i, j, nb)**2))*g2
                c(i, j, nb) = dsqrt(g1*p(i, j, nb)/rho(i, j, nb))
                t(i, j, nb) = p(i, j, nb)/(r*rho(i, j, nb))
                h(i, j, nb) = (p(i, j, nb)/g2 + p(i, j, nb) + &
@@ -111,7 +111,7 @@ module misc
          do nb = 1, nblocks
             do j = 1, ny(nb)
                do i = 1, nx(nb)
-                  qplus = dsqrt(u(i, j, nb)**2 + v(i, j, nb))
+                  qplus = dsqrt(u(i, j, nb)**2 + v(i, j, nb)**2)
                   asound = c(i, j, nb)
                   dt_cellvalue = cfl_no*dl(i, j, nb)/qplus
                   dt_cell(i, j, nb) = dt_cellvalue
@@ -133,10 +133,10 @@ module misc
       integer(i16) :: i, j
 
       open(unit=unit_id, file=filename, form='formatted')
-
+      nb = 1  ! need to find a fix for this
       write(unit_id, *) "VARIABLES = X, Y, DENSITY, U, V, P, T"
       write(unit_id, *) "ZONE I=", imax(nb), ", J=", jmax(nb), &
-           "DATAPCKING=BLOCK, VARLOCATION=([3,4,5,6,7]=CELLCENTERED)"
+           "DATAPACKING=BLOCK, VARLOCATION=([3,4,5,6,7]=CELLCENTERED)"
       write(unit_id, *) "SOLUTIONTIME=", time
 
       do nb = 1, nblocks
@@ -204,7 +204,8 @@ module misc
       integer(i16) :: i, j
 
       open(unit=23, status='replace', file=restartfile, form='formatted')
-      write(23, *) ((((q(k, i, j, nb), k=1, 4), i = 1, nx(nb)), j = 1, ny(nb)), nb =1, nblocks)
+      write(23, *) ((((q(k, i, j, nb), k=1, 4), i = 1, nx(nb)), &
+           j = 1, ny(nb)), nb =1, nblocks)
       close(23)
     end subroutine write_restart
   end module misc

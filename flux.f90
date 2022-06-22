@@ -34,7 +34,7 @@ module flux
       rhol = ql(1)
       ul = ql(2)/rhol
       vl = ql(3)/rhol
-      pl = g2*(ql(4) - half*rhol*(ul**2 + vl**2))
+      pl = g2*(ql(4) - half*rhol*(ul*ul + vl*vl))
 
       rhor = qr(1)
       ur = qr(2)/rhor
@@ -50,14 +50,14 @@ module flux
       asoundl = dsqrt(g1*pl/rhol)
       asoundr = dsqrt(g1*pr/rhor)
 
-      qro = (dsqrt(rhol)*ul + dsqrt(rhor)*ur)/&
+      qro = (dsqrt(rhol)*ul + dsqrt(rhor)*ur)/ &
            (dsqrt(rhol) + dsqrt(rhor)) !roeavg(rhol, rhor, qnl, qnr)
       aro = (dsqrt(rhol)*asoundl + dsqrt(rhor)*asoundr)/ &
            (dsqrt(rhol) + dsqrt(rhor))!roeavg(rhol, rhor, asoundl, asoundr)
 
       sr = dmax1(qro+aro, qnr+asoundr, zero)
 
-      fluxvalue = half*(fl + fr - sr*(qr - ql))*dlen
+      fluxvalue = half*(fl + fr - dabs(sr)*(qr - ql))*dlen
     end subroutine lf
 
     subroutine isecondMUSCL

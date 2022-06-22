@@ -22,9 +22,10 @@ module odesolver
                do i = 1, nx(nb)
                   dtmod = dt_cell(i, j, nb)/a(i, j, nb)
                   do k = 1, 4
-                     q_rk(1, k, i, j, nb) = dtmod*(-l_res(k, i, j, nb))
+                     !q_rk(1, k, i, j, nb) = dtmod*(-l_res(k, i, j, nb))
                      qn(k, i, j, nb) = qi(k, i, j, nb) + &
                           dtmod*(-l_res(k, i, j, nb))
+                     q_rk(1, k, i, j, nb) = qn(k, i, j, nb)
                   end do
                end do
             end do
@@ -35,10 +36,13 @@ module odesolver
                do i = 1, nx(nb)
                   dtmod = dt_cell(i, j, nb)/a(i, j, nb)
                   do k = 1, 4
-                     q_rk(2, k, i, j, nb) = dtmod*(-l_res(k, i, j, nb))
-                     qn(k, i, j, nb) = qi(k, i, j, nb) + &
+                    ! q_rk(2, k, i, j, nb) = dtmod*(-l_res(k, i, j, nb))
+                     !qn(k, i, j, nb) = qi(k, i, j, nb) + &
+                      !    half*q_rk(1, k, i, j, nb) + &
+                       !   half*q_rk(2, k, i, j, nb)
+                     qn(k, i, j, nb) = half*qi(k, i, j, nb) + &
                           half*q_rk(1, k, i, j, nb) + &
-                          half*q_rk(2, k, i, j, nb)
+                          half*dtmod*(-l_res(k, i, j, nb))
                   end do
                end do
             end do

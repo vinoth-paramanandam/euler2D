@@ -173,6 +173,7 @@ module boundary
       rin = pin/(r*tinf)
       uin = mach_no*dsqrt(g1*pin/rin)
       vin = zero
+      
       do j = 1, ny(nb)
          do i = -2, 0
             dxlen = (-x(1, j, nb) + x(1, j+1, nb))

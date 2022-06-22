@@ -1,7 +1,7 @@
 module initial
   use constant
   use declaration
-  use misc, only: primitive2conservative, primitive_calc
+  use misc, only: primitive2conservative, primitive_calc, write_output
   use iso_fortran_env
 
   implicit none
@@ -57,6 +57,10 @@ module initial
       call primitive_calc
       call primitive2conservative
 
+      unit_id = 229
+      filename = 'plot_initial.dat'
+      call write_output
+
     end subroutine read_initial_conds
 
     subroutine nozzle_initial_conds
@@ -78,6 +82,10 @@ module initial
 
       call primitive_calc
       call primitive2conservative
+
+      unit_id = 229
+      filename = 'plot_initial.dat'
+      call write_output
 
     end subroutine nozzle_initial_conds
 

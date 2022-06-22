@@ -69,6 +69,7 @@ module read_input
        rinit = pinit/(r*tinit)
        uinit = mach_no*dsqrt(g1*pinit/rinit)
        vinit = zero
+
     end if
 
   end subroutine read_inputfile

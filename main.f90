@@ -45,9 +45,9 @@ program main
      do irkstep = 1, nsteps
         l_res = zero
 
-       call isecondMUSCL
+        call isecondMUSCL
 
-       call jsecondMUSCL
+        call jsecondMUSCL
 
         call tvdrk2(irkstep)
 
@@ -56,9 +56,9 @@ program main
         call conservative2primitive
 
         call nozzleboundary
-        
+
      end do
-      
+
      rss = 1.0d8
 
      diffro = zero
@@ -85,7 +85,7 @@ program main
            do nb = 1, nblocks
               do j = 1, ny(nb)
                  do i = 1, nx(nb)
-                    temp = q(1, i, j, nb) - qi(1, i, j, k)
+                    temp = q(1, i, j, nb) - qi(1, i, j, nb)
                     sum2n = sum2n + temp*temp
                  end do
               end do
