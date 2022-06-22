@@ -45,6 +45,7 @@ module constant
   real(dp), parameter :: eleven = 11.0d0
   real(dp), parameter :: twelve = 12.0d0
   real(dp), parameter :: thirteen = 13.0d0
+  real(dp), parameter :: sixteen = 16.0d0
 
   ! fraction
   real(dp), parameter :: half = 0.5d0

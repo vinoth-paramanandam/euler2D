@@ -24,8 +24,8 @@ module declaration
   integer(i32) :: max_counter, print_iter, print_val
 
   ! Gas dynamics constants
-  real(dp) :: g1, amol, pr_lam, c1ref
-  real(dp) :: g2, r, c23, cpval, cvval
+  real(dp) :: g1, amol, pr_lam, c1ref, r
+  real(dp) :: g2, g3, c23, cpval, cvval
 
   ! Files for the problem
   character(len=50) :: gridfile, restartfile, outputfile, boundaryfile

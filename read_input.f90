@@ -58,6 +58,7 @@ module read_input
     ! Calculating various constants
     r = Runiv/amol
     g2 = g1 - one
+    g3 = g1 + one
     cpval = g1*r/g2
     cvval = r/g2
     c23 = two/three
