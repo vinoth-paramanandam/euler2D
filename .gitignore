@@ -34,3 +34,5 @@
 
 # Other data files
 *.dat
+residual.in
+restartout.in
