@@ -112,8 +112,8 @@ module grid
       end do
 
       do nb = 1, nblocks
-         do j = 1, ny(nb)
-            do i = 1, nx(nb)
+         do j = -2, ny(nb)+gc
+            do i = -2, nx(nb)+gc
                x1 = x(i, j, nb)
                x2 = x(i+1, j, nb)
                x3 = x(i+1, j+1, nb)

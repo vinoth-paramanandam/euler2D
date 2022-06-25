@@ -178,6 +178,8 @@ module flux
       real(dp) :: dxlen, dylen, dlen, normalx, normaly
       real(dp), dimension(4) :: fluxval, vecl, vecr
       real(dp), dimension(4) :: ar, al, br, bl, delR, delL
+      real(dp), dimension(4) :: rR, rL, psiR, psiL
+      real(dp) :: delxc, delxcu, delxdc, delxd
 
       do nb = 1, nblocks
          do j = 1, ny(nb)
@@ -188,19 +190,36 @@ module flux
                normalx = dylen/dlen
                normaly = dxlen/dlen
 
-               ar = q(:, i+2, j, nb) - q(:, i+1, j, nb)
-               br = q(:, i+1, j, nb) - q(:, i, j, nb)
+               ! Find the length of the cell denoted as del_xc in waterson and Deconinck paper 2007
+               delxc = x(i+1, j, nb) -  x(i, j, nb)
+               delxd = x(i+2, j, nb) - x(i+1, j, nb)
+               delxcu = xc(i, j, nb) - xc(i-1, j, nb)
+               delxdc = xc(i+2, j, nb) - xc(i+1, j, nb)
 
-               al = q(:, i+1, j, nb) - q(:, i, j, nb)
-               bl = q(:, i, j, nb) - q(:, i-1, j, nb)
+               ar = (q(:, i+2, j, nb) - q(:, i+1, j, nb))/delxdc
+               br = (q(:, i+1, j, nb) - q(:, i, j, nb))/delxdc
 
-               delR = (ar*(br*br + e_tvd) + br*(ar*ar + e_tvd))/&
-                    (ar*ar + br*br + two*e_tvd)
-               delL =  (al*(bl*bl + e_tvd) + bl*(al*al + e_tvd))/&
-                    (al*al + bl*bl + two*e_tvd)
+               al = (q(:, i+1, j, nb) - q(:, i, j, nb))/delxcu
+               bl = (q(:, i, j, nb) - q(:, i-1, j, nb))/delxcu
 
-               vecl = q(:, i, j, nb) + half*delL
-               vecr = q(:, i+1, j, nb) - half*delR
+               rR = br/(ar + e_tvd)
+               rL = al/(bl + e_tvd)
+
+               !psiR = dmax1(zero, dmin1(rR, one))!(rR*rR + rR)/(rR + 1 + e_tvd)
+               !psiL = dmax1(zero, dmin1(rL, one))!(rL*rL + rL)/(rL + 1 + e_tvd)
+               psiR = (rR*rR + rR)/(rR*rR + 1 + e_tvd)
+               psiL = (rL*rL + rL)/(rL*rL + 1 + e_tvd)
+
+               vecr = q(:, i+1, j, nb) - delxd*half*psiR*ar
+               vecl = q(:, i, j, nb) + delxc*half*psiL*bl
+
+              ! delR = (ar*(br*br + e_tvd) + br*(ar*ar + e_tvd))/&
+              !      (ar*ar + br*br + two*e_tvd)
+              ! delL =  (al*(bl*bl + e_tvd) + bl*(al*al + e_tvd))/&
+              !      (al*al + bl*bl + two*e_tvd)
+
+              ! vecl = q(:, i, j, nb) + half*delL
+              ! vecr = q(:, i+1, j, nb) - half*delR
                ! vecl = q(:, i, j, nb)
                ! vecr = q(:, i+1, j, nb)
 
@@ -223,6 +242,8 @@ module flux
       real(dp) :: dxlen, dylen, dlen, normalx, normaly
       real(dp), dimension(4) :: fluxval, vecl, vecr
       real(dp), dimension(4) :: ar, al, br, bl, delR, delL
+      real(dp), dimension(4) :: psiL, psiR, rR, rL
+      real(dp) :: delxc, delxd, delxcu, delxdc
 
       do nb = 1, nblocks
          do j = 0, ny(nb)
@@ -232,20 +253,42 @@ module flux
                dlen = dsqrt(dxlen*dxlen + dylen*dylen)
                normalx = dylen/dlen
                normaly = dxlen/dlen
+               ! Find the length of the cell denoted as del_xc in waterson and Deconinck paper 2007
+               delxc = y(i, j+1, nb) - y(i, j, nb)
+               delxd = y(i, j+2, nb) - y(i, j+1, nb)
+               delxcu = yc(i, j, nb) - yc(i, j-1, nb)
+               delxdc = yc(i, j+2, nb) - yc(i, j+1, nb)
 
-               ar = q(:, i, j+2, nb) - q(:, i, j+1, nb)
-               br = q(:, i, j+1, nb) - q(:, i, j, nb)
+               ar = (q(:, i, j+2, nb) - q(:, i, j+1, nb))/delxdc
+               br = (q(:, i, j+1, nb) - q(:, i, j, nb))/delxdc
 
-               al = q(:, i, j+1, nb) - q(:, i, j, nb)
-               bl = q(:, i, j, nb) - q(:, i, j-1, nb)
+               al = (q(:, i, j+1, nb) - q(:, i, j, nb))/delxcu
+               bl = (q(:, i, j, nb) - q(:, i, j-1, nb))/delxcu
 
-               delR = (ar*(br*br + e_tvd) + br*(ar*ar + e_tvd))/&
-                    (ar*ar + br*br + two*e_tvd)
-               delL =  (al*(bl*bl + e_tvd) + bl*(al*al + e_tvd))/&
-                    (al*al + bl*bl + two*e_tvd)
+               rR = br/(ar + e_tvd)
+               rL = al/(bl + e_tvd)
 
-               vecl = q(:, i, j, nb) + half*delL
-               vecr = q(:, i, j+1, nb) - half*delR
+               !psiR = dmax1(zero, dmin1(rR, one))!(rR*rR + rR)/(rR + 1 + e_tvd)
+               !psiL = dmax1(zero, dmin1(rL, one))!(rL*rL + rL)/(rL + 1 + e_tvd)
+               psiR = (rR*rR + rR)/(rR*rR + 1 + e_tvd)
+               psiL = (rL*rL + rL)/(rL*rL + 1 + e_tvd)
+
+               vecr = q(:, i, j+1, nb) - delxd*half*psiR*ar
+               vecl = q(:, i, j, nb) + delxc*half*psiL*bl
+
+              ! ar = q(:, i, j+2, nb) - q(:, i, j+1, nb)
+              ! br = q(:, i, j+1, nb) - q(:, i, j, nb)
+
+              ! al = q(:, i, j+1, nb) - q(:, i, j, nb)
+              ! bl = q(:, i, j, nb) - q(:, i, j-1, nb)
+
+              ! delR = (ar*(br*br + e_tvd) + br*(ar*ar + e_tvd))/&
+               !     (ar*ar + br*br + two*e_tvd)
+              ! delL =  (al*(bl*bl + e_tvd) + bl*(al*al + e_tvd))/&
+                !    (al*al + bl*bl + two*e_tvd)
+
+              ! vecl = q(:, i, j, nb) + half*delL
+              ! vecr = q(:, i, j+1, nb) - half*delR
                ! vecl = q(:, i, j, nb)
                ! vecr = q(:, i, j+1, nb)
 
@@ -254,6 +297,13 @@ module flux
 
                l_res(:, i, j, nb) = l_res(:, i, j, nb) + fluxval
                l_res(:, i, j+1, nb) = l_res(:, i, j+1, nb) - fluxval
+
+               if (isnan(l_res(1, i, j, nb))) then
+                  print *, i, j, nb
+                  print *, delxc, delxd, delxc, delxcu, delxdc
+                  print *, rR, rL
+                  stop
+               end if
             end do
          end do
       end do
