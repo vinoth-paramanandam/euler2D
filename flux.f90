@@ -207,8 +207,10 @@ module flux
 
                !psiR = dmax1(zero, dmin1(rR, one))!(rR*rR + rR)/(rR + 1 + e_tvd)
                !psiL = dmax1(zero, dmin1(rL, one))!(rL*rL + rL)/(rL + 1 + e_tvd)
-               psiR = (rR*rR + rR)/(rR*rR + 1 + e_tvd)
-               psiL = (rL*rL + rL)/(rL*rL + 1 + e_tvd)
+               !psiR = (rR*rR + rR)/(rR*rR + 1 + e_tvd)
+               !psiL = (rL*rL + rL)/(rL*rL + 1 + e_tvd)
+               psiR = (rR + dabs(rR))/(rR + one)
+               psiL = (rL + dabs(rL))/(rL + one)
 
                vecr = q(:, i+1, j, nb) - delxd*half*psiR*ar
                vecl = q(:, i, j, nb) + delxc*half*psiL*bl
@@ -270,8 +272,10 @@ module flux
 
                !psiR = dmax1(zero, dmin1(rR, one))!(rR*rR + rR)/(rR + 1 + e_tvd)
                !psiL = dmax1(zero, dmin1(rL, one))!(rL*rL + rL)/(rL + 1 + e_tvd)
-               psiR = (rR*rR + rR)/(rR*rR + 1 + e_tvd)
-               psiL = (rL*rL + rL)/(rL*rL + 1 + e_tvd)
+               !psiR = (rR*rR + rR)/(rR*rR + 1 + e_tvd)
+               !psiL = (rL*rL + rL)/(rL*rL + 1 + e_tvd)
+               psiR = (rR + dabs(rR))/(rR + one)
+               psiL = (rL + dabs(rL))/(rL + one)
 
                vecr = q(:, i, j+1, nb) - delxd*half*psiR*ar
                vecl = q(:, i, j, nb) + delxc*half*psiL*bl
