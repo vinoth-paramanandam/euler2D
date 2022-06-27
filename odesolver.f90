@@ -17,6 +17,9 @@ module odesolver
       real(dp) :: dtmod
 
       if(rkstep .eq. 1) then
+         !$omp parallel do &
+         !$omp default(private) &
+         !$omp shared(nblocks, nx, ny, dt_cell, a, qn, qi, l_res, q_rk)
          do nb = 1, nblocks
             do j = 1, ny(nb)
                do i = 1, nx(nb)
@@ -30,7 +33,11 @@ module odesolver
                end do
             end do
          end do
+         !$omp end parallel do
       else
+         !$omp parallel do &
+         !$omp default(private) &
+         !$omp shared(nblocks, nx, ny, dt_cell, a, qn, qi, q_rk, l_res)
          do nb = 1, nblocks
             do j = 1, ny(nb)
                do i = 1, nx(nb)
@@ -47,6 +54,7 @@ module odesolver
                end do
             end do
          end do
+         !$omp end parallel do
       end if
     end subroutine tvdrk2
 

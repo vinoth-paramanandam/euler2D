@@ -12,7 +12,9 @@ module misc
 
       integer(i8) :: nb
       integer(i16) :: i, j
-
+      !$omp parallel do &
+      !$omp default(private) &
+      !$omp shared(nblocks, nx, ny, q, rho, u, v, t, cvval)
       do nb = 1, nblocks
          do j = 1, ny(nb)
             do i = 1, nx(nb)
@@ -24,7 +26,7 @@ module misc
             end do
          end do
       end do
-
+      !$omp end parallel do
     end subroutine primitive2conservative
 
     subroutine conservative2primitive
@@ -33,6 +35,9 @@ module misc
       integer(i8) :: nb
       integer(i16) :: i, j
 
+      !$omp parallel do &
+      !$omp default (private) &
+      !$omp shared(nblocks, nx, ny, rho, u, v, p, t, c, h, q, g1, g2, r)
       do nb = 1, nblocks
          do j = 1, ny(nb)
             do i = 1, nx(nb)
@@ -49,6 +54,7 @@ module misc
             end do
          end do
       end do
+      !$omp end parallel do
     end subroutine conservative2primitive
 
     subroutine primitive_calc
@@ -57,6 +63,9 @@ module misc
       integer(i8) :: nb
       integer(i16) :: i, j
 
+      !$omp parallel do &
+      !$omp default(private) &
+      !$omp shared(nblocks, nx, ny, c, t, h, p, rho, u, v, g1, g2, r)
       do nb = 1, nblocks
          do j = 1, ny(nb)
             do i = 1, nx(nb)
@@ -68,7 +77,7 @@ module misc
             end do
          end do
       end do
-
+      !$omp end parallel do
     end subroutine primitive_calc
 
     subroutine read_restart_file
@@ -109,7 +118,9 @@ module misc
 
       if (cfl) then
          dtmin = 1.0e8
-
+         !$omp parallel do reduction(min:dtmin) &
+         !$omp default(private) &
+         !$omp shared(nblocks, nx, ny, u, v, c, dl, dt_cell)
          do nb = 1, nblocks
             do j = 1, ny(nb)
                do i = 1, nx(nb)
@@ -121,6 +132,7 @@ module misc
                end do
             end do
          end do
+         !$omp end parallel do
          if (timeaccurate) then
             dt_cell = dtmin
          end if
