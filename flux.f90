@@ -181,10 +181,10 @@ module flux
       real(dp), dimension(4) :: rR, rL, psiR, psiL
       real(dp) :: delxc, delxcu, delxdc, delxd
 
-      !$omp parallel do &
-      !$omp default(private) &
-      !$omp shared(x, y, xc, q, l_res, nblocks, ny, nx, g2, r)
       do nb = 1, nblocks
+         !$omp parallel do &
+         !$omp default(private) &
+         !$omp shared(x, y, xc, q, l_res, nb, ny, nx, g2, r)
          do j = 1, ny(nb)
             do i = 0, nx(nb)
                dxlen = -(x(i+1, j+1, nb) - x(i+1, j, nb))
@@ -235,8 +235,8 @@ module flux
                l_res(:, i+1, j, nb) = l_res(:, i+1, j, nb) - fluxval
             end do
          end do
+         !$omp end parallel do
       end do
-      !$omp end  parallel do
     end subroutine isecondMUSCL
 
     subroutine jsecondMUSCL
@@ -251,10 +251,10 @@ module flux
       real(dp), dimension(4) :: psiL, psiR, rR, rL
       real(dp) :: delxc, delxd, delxcu, delxdc
 
-      !$omp parallel do &
-      !$omp default(private) &
-      !$omp shared(nblocks, ny, nx, x, y, yc, q, l_res, g2, r)
       do nb = 1, nblocks
+         !$omp parallel do &
+         !$omp default(private) &
+         !$omp shared(nb, ny, nx, x, y, yc, q, l_res, g2, r)
          do j = 0, ny(nb)
             do i = 1, nx(nb)
                dxlen = -(x(i, j+1, nb) - x(i+1, j+1, nb))
@@ -310,8 +310,9 @@ module flux
                l_res(:, i, j+1, nb) = l_res(:, i, j+1, nb) - fluxval
             end do
          end do
+         !$omp end parallel do
       end do
-      !$omp end parallel do
+
     end subroutine jsecondMUSCL
 
   end module flux
