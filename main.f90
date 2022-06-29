@@ -68,10 +68,10 @@ program main
 
      if (mod(counter, print_val) == 0) then
         if (norm) then
-           !$omp parallel do reduction(+:sum1n) &
-           !$omp default(private) &
-           !$omp shared(nblocks, nx, ny, q, qi)
            do nb = 1, nblocks
+              !$omp parallel do reduction(+:sum1n) &
+              !$omp default(private) &
+              !$omp shared(nb, nx, ny, q, qi)
               do j = 1, ny(nb)
                  do i = 1, nx(nb)
                     do k = 1, 4
@@ -79,24 +79,24 @@ program main
                     end do
                  end do
               end do
+              !$omp end parallel do
            end do
-           !$omp end parallel do
 
            do k = 1, 4
               sum1n(k) = dsqrt(sum1n(k))
            end do
-           !$omp parallel do reduction(+:sum2n) &
-           !$omp default(private) &
-           !$omp shared(nblocks, nx, ny, q, qi)
            do nb = 1, nblocks
+              !$omp parallel do reduction(+:sum2n) &
+              !$omp default(private) &
+              !$omp shared(nb, nx, ny, q, qi)
               do j = 1, ny(nb)
                  do i = 1, nx(nb)
                     temp = q(1, i, j, nb) - qi(1, i, j, nb)
                     sum2n = sum2n + temp*temp
                  end do
               end do
+              !$omp end parallel do
            end do
-           !$omp end parallel do
 
            rss = dsqrt(sum2n)
           ! open(unit = 29, status = 'old', file = outputfile, form = 'formatted')
